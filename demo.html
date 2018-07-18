@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>FDS Javascript demo</title>
+    <script type="text/javascript" src="jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="jQuery.md5.js"></script>
+    <script type="text/javascript" src="jquery.fileDownload-1.4.3.js"></script>
+    <script type="text/javascript" src="fds/ClientConfiguration.js"></script>
+    <script type="text/javascript" src="fds/GalaxyFDSClient.js"></script>
+    <script type="text/javascript" src="fds/auth/Common.js"></script>
+    <script type="text/javascript" src="fds/auth/SSOCredential.js"></script>
+    <script type="text/javascript" src="fds/model/FDSObjectMetadata.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      
+      $(document).ready(function() {
+        
+        $("#submitForm").click(function() {
+          var file = $("input[type=file]")[0].files[0];
+          var formData = new FormData();
+          formData.append("file", file);
+          uploadedFile = file.name;
+         //先要传入fileName，通过后台生成预签名，再上传到小米cdn 要设置时间最长的话，需要传入加上expires=9223372036854775807  java long最大值
+          $.ajax({
+                url: 'https://cnbj2.fds.api.xiaomi.com/cdn/a_test/111.jpeg?GalaxyAccessKeyId=5521734060361&Expires=9223372036854775807&Signature=3E63bctpc+lwyxLXItlTrf9gAwI=&expires=9223372036854775807',
+                type: 'PUT',
+                dataType: "json",
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {  
+                    
+                }, 
+                success: function( response ) {
+                    console.log(response);
+                }
+           });
+        })
+  
+      });
+    </script>
+    
+
+    <form action="" id="update_user_modal">
+      <input id="uploadFile" type="file" value="file"/>
+      <input id="submitForm" type="button" value="Submit"/>
+    </form>
+    <div id="fileUploadResult"></div>
+
+    <input type="button" value="Download the file" onclick="downloadFile()" />
+    <div id="downloadFile"></div>
+    <br/>
+
+    <input type="button" value="List all the objects" onclick="listObjects()" />
+    <div id="listObjects"></div>
+    <br/>
+  </body>
+</html>
